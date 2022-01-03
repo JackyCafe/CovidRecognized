@@ -24,7 +24,24 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tv"
+            android:id="@+id/label1"
+            android:textSize="18dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/label2"
+            android:textSize="18dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/label3"
+            android:textSize="18dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/label4"
+            android:textSize="18dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </androidx.appcompat.widget.LinearLayoutCompat>
