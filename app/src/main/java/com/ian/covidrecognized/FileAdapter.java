@@ -65,8 +65,10 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.VH>{
     public void onBindViewHolder(@NonNull VH holder, int position) {
         String filename=datas.get(position).getFile_name();
         Bitmap bImage = BitmapFactory.decodeFile(filename);
+        File f = new File(filename);
+
         String type = datas.get(position).getType();
-        holder.label.setText(type);
+        holder.label.setText(f.getName());
         holder.thumbnail.setImageBitmap(bImage);
 
     }

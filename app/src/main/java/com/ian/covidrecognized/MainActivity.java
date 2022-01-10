@@ -73,8 +73,8 @@ public class MainActivity extends AppCompatActivity {
     // 保存模型的標籤
     List<String> labelList;
     // 初始模型的輸入圖像尺寸
-    private int DIM_IMG_SIZE_X = 32; //299
-    private int DIM_IMG_SIZE_Y = 32; //299
+    private int DIM_IMG_SIZE_X = 224; //299
+    private int DIM_IMG_SIZE_Y = 224; //299
     private int DIM_PIXEL_SIZE = 3;
     // 圖片保存為bytes
     private ByteBuffer imgData = null;
@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
                 String filename = covid_files.get(position).getFile_name();
                 Bitmap bImage = BitmapFactory.decodeFile(filename);
                 imageView.setImageBitmap(bImage);
-                Bitmap bitmapImg = getResizeBitmap(bImage,32,32);
+                Bitmap bitmapImg = getResizeBitmap(bImage,224,224);
                 convertBitToByteBuffer(bitmapImg);
                 tflite.run(imgData,labelProbArray);
 
@@ -219,6 +219,8 @@ public class MainActivity extends AppCompatActivity {
         if (imgData==null){
             return;
         }
+        imgData =ByteBuffer.allocateDirect(4*DIM_IMG_SIZE_X*DIM_IMG_SIZE_Y*DIM_PIXEL_SIZE);
+        imgData.order(ByteOrder.nativeOrder());
         imgData.rewind();
         bitmap.getPixels(intValues,0,bitmap.getWidth(),0,0,bitmap.getWidth(),bitmap.getHeight());
         int pixel = 0 ;
@@ -228,10 +230,9 @@ public class MainActivity extends AppCompatActivity {
                 imgData.putFloat((val>>16)&0xFF);
                 imgData.putFloat((val>>8)&0xFF);
                 imgData.putFloat((val)&0xFF);
-//                imgData.putFloat((((val>>16)&0xFF)-IMAGE_MEAN)/IMAGE_STD);
-//                imgData.putFloat((((val>>8)&0xFF)-IMAGE_MEAN)/IMAGE_STD);
-//                imgData.putFloat((((val)&0xFF)-IMAGE_MEAN)/IMAGE_STD);
+
             }
+            Log.v(TAG,""+imgData.get(0));
         }
     }
 
@@ -244,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
                 sortrdLabels.poll();
             }
         }
-//        Log.v(TAG,sortrdLabels.toString());
+        Log.v(TAG,sortrdLabels.toString());
         final int size = sortrdLabels.size();
         for (int i=0;i<size;++i){
             Map.Entry<String,Float> label = sortrdLabels.poll();
@@ -278,6 +279,7 @@ public class MainActivity extends AppCompatActivity {
     /*讀資料夾影片檔名*/
     private List<FileSturct> readTheFiles() {
         File files = new File(path.getPath()+"/COVID-19_Radiography_Dataset");
+//        File files = new File(path.getPath()+"/Test");
         List<FileSturct> covid_files = new ArrayList<>();
         for(File dir: files.listFiles()){
                 FileSturct file_type;
